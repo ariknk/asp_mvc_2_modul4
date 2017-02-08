@@ -9,6 +9,20 @@ namespace Asp_mvc_2.Models.EntityManager
 {
     public class UserManager
     {
+
+        public string GetUserPassword(string loginName)
+        {
+            using (DemoDBEntities db = new DemoDBEntities())
+            {
+                var user = db.SYSUsers.Where(o =>
+o.LoginName.ToLower().Equals(loginName));
+                if (user.Any())
+                    return user.FirstOrDefault().PasswordEncryptedText;
+                else
+                    return string.Empty;
+            }
+        }
+
         public void AddUserAccount(UserSignUpView user)
         {
 
@@ -65,5 +79,30 @@ namespace Asp_mvc_2.Models.EntityManager
                 return db.SYSUsers.Where(o => o.LoginName.Equals(loginName)).Any();
             }
         }
+        public bool IsUserInRole(string loginName, string roleName)
+        {
+            using (DemoDBEntities db = new DemoDBEntities())
+            {
+                SYSUser SU = db.SYSUsers.Where(o =>
+o.LoginName.ToLower().Equals(loginName))?.FirstOrDefault();
+                if (SU != null)
+                {
+                    var roles = from q in db.SYSUserRoles
+                                join r in db.LOOKUPRoles on q.LOOKUPRoleID equals
+r.LOOKUPRoleID
+                                where r.RoleName.Equals(roleName) &&
+q.SYSUserID.Equals(SU.SYSUserID)
+                                select r.RoleName;
+
+                    if (roles != null)
+                    {
+                        return roles.Any();
+                    }
+                }
+
+                return false;
+            }
+        }
     }
+
 }

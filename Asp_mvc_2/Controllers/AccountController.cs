@@ -7,6 +7,13 @@ namespace Asp_mvc_2.Controllers
 {
     public class AccountController : Controller
     {
+
+        public ActionResult LogIn()
+        {
+            return View();
+        }
+
+       
         public ActionResult SignUp()
         {
             return View();
@@ -30,5 +37,39 @@ namespace Asp_mvc_2.Controllers
             }
             return View();
         }
+        [HttpPost]
+        public ActionResult LogIn(UserLoginView ULV, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                UserManager UM = new UserManager();
+                string password = UM.GetUserPassword(ULV.LoginName);
+
+                if (string.IsNullOrEmpty(password))
+                    ModelState.AddModelError("", "The user login or password provided is incorrect.");
+                else
+                {
+                    if (ULV.Password.Equals(password))
+                    {
+                        FormsAuthentication.SetAuthCookie(ULV.LoginName, false);
+                        return RedirectToAction("Welcome", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "The password provided is incorrect.");
+                    }
+                }
+            }
+
+            // If we got this far, something failed, redisplay form 
+            return View(ULV);
+        }
+        [Authorize]
+        public ActionResult SignOut()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
     }
+
 }
