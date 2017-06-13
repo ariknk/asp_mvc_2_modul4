@@ -5,6 +5,33 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="DemoDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="buku">
+          <Key>
+            <PropertyRef Name="id_buku" />
+          </Key>
+          <Property Name="id_buku" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ISBN" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="judul" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="penulis" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="penerbit" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="tahun" Type="int" Nullable="false" />
+          <Property Name="stok" Type="int" Nullable="false" />
+          <Property Name="harga_beli" Type="int" Nullable="false" />
+          <Property Name="harga_jual" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="laporan">
+          <Key>
+            <PropertyRef Name="id_laporan" />
+          </Key>
+          <Property Name="id_laporan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_buku" Type="int" Nullable="false" />
+          <Property Name="id_pelanggan" Type="int" Nullable="false" />
+          <Property Name="keterangan" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="tanggal" Type="date" Nullable="false" />
+          <Property Name="debet" Type="int" Nullable="false" />
+          <Property Name="kredit" Type="int" Nullable="false" />
+          <Property Name="saldo" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="LOOKUPRole">
           <Key>
             <PropertyRef Name="LOOKUPRoleID" />
@@ -16,6 +43,17 @@
           <Property Name="RowCreatedDateTime" Type="datetime" />
           <Property Name="RowModifiedSYSUserID" Type="int" Nullable="false" />
           <Property Name="RowModifiedDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="pelanggan">
+          <Key>
+            <PropertyRef Name="id_pelanggan" />
+          </Key>
+          <Property Name="id_pelanggan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="no_id" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="nama" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="alamat" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="no_tlp1" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="no_tlp2" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="SYSUser">
           <Key>
@@ -56,7 +94,31 @@
           <Property Name="RowModifiedSYSUserID" Type="int" Nullable="false" />
           <Property Name="RowModifiedDateTime" Type="datetime" />
         </EntityType>
-        <Association Name="FK__SYSUserPr__SYSUs__1BFD2C07">
+        <Association Name="FK__laporan__id_buku__3D5E1FD2">
+          <End Role="buku" Type="Self.buku" Multiplicity="1" />
+          <End Role="laporan" Type="Self.laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="buku">
+              <PropertyRef Name="id_buku" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_buku" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__laporan__id_pela__3C69FB99">
+          <End Role="pelanggan" Type="Self.pelanggan" Multiplicity="1" />
+          <End Role="laporan" Type="Self.laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pelanggan">
+              <PropertyRef Name="id_pelanggan" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_pelanggan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SYSUserPr__SYSUs__2F10007B">
           <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
           <End Role="SYSUserProfile" Type="Self.SYSUserProfile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -68,19 +130,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SYSUserPr__SYSUs__267ABA7A">
-          <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
-          <End Role="SYSUserProfile" Type="Self.SYSUserProfile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYSUser">
-              <PropertyRef Name="SYSUserID" />
-            </Principal>
-            <Dependent Role="SYSUserProfile">
-              <PropertyRef Name="SYSUserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYSUserRo__LOOKU__21B6055D">
+        <Association Name="FK__SYSUserRo__LOOKU__34C8D9D1">
           <End Role="LOOKUPRole" Type="Self.LOOKUPRole" Multiplicity="1" />
           <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
           <ReferentialConstraint>
@@ -92,31 +142,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SYSUserRo__LOOKU__286302EC">
-          <End Role="LOOKUPRole" Type="Self.LOOKUPRole" Multiplicity="1" />
-          <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LOOKUPRole">
-              <PropertyRef Name="LOOKUPRoleID" />
-            </Principal>
-            <Dependent Role="SYSUserRole">
-              <PropertyRef Name="LOOKUPRoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYSUserRo__SYSUs__22AA2996">
-          <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
-          <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYSUser">
-              <PropertyRef Name="SYSUserID" />
-            </Principal>
-            <Dependent Role="SYSUserRole">
-              <PropertyRef Name="SYSUserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYSUserRo__SYSUs__29572725">
+        <Association Name="FK__SYSUserRo__SYSUs__35BCFE0A">
           <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
           <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
           <ReferentialConstraint>
@@ -129,31 +155,30 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="DemoDBModelStoreContainer">
+          <EntitySet Name="buku" EntityType="Self.buku" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="laporan" EntityType="Self.laporan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LOOKUPRole" EntityType="Self.LOOKUPRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pelanggan" EntityType="Self.pelanggan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYSUser" EntityType="Self.SYSUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYSUserProfile" EntityType="Self.SYSUserProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYSUserRole" EntityType="Self.SYSUserRole" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__SYSUserPr__SYSUs__1BFD2C07" Association="Self.FK__SYSUserPr__SYSUs__1BFD2C07">
+          <AssociationSet Name="FK__laporan__id_buku__3D5E1FD2" Association="Self.FK__laporan__id_buku__3D5E1FD2">
+            <End Role="buku" EntitySet="buku" />
+            <End Role="laporan" EntitySet="laporan" />
+          </AssociationSet>
+          <AssociationSet Name="FK__laporan__id_pela__3C69FB99" Association="Self.FK__laporan__id_pela__3C69FB99">
+            <End Role="pelanggan" EntitySet="pelanggan" />
+            <End Role="laporan" EntitySet="laporan" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SYSUserPr__SYSUs__2F10007B" Association="Self.FK__SYSUserPr__SYSUs__2F10007B">
             <End Role="SYSUser" EntitySet="SYSUser" />
             <End Role="SYSUserProfile" EntitySet="SYSUserProfile" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYSUserPr__SYSUs__267ABA7A" Association="Self.FK__SYSUserPr__SYSUs__267ABA7A">
-            <End Role="SYSUser" EntitySet="SYSUser" />
-            <End Role="SYSUserProfile" EntitySet="SYSUserProfile" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__LOOKU__21B6055D" Association="Self.FK__SYSUserRo__LOOKU__21B6055D">
+          <AssociationSet Name="FK__SYSUserRo__LOOKU__34C8D9D1" Association="Self.FK__SYSUserRo__LOOKU__34C8D9D1">
             <End Role="LOOKUPRole" EntitySet="LOOKUPRole" />
             <End Role="SYSUserRole" EntitySet="SYSUserRole" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__LOOKU__286302EC" Association="Self.FK__SYSUserRo__LOOKU__286302EC">
-            <End Role="LOOKUPRole" EntitySet="LOOKUPRole" />
-            <End Role="SYSUserRole" EntitySet="SYSUserRole" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__SYSUs__22AA2996" Association="Self.FK__SYSUserRo__SYSUs__22AA2996">
-            <End Role="SYSUser" EntitySet="SYSUser" />
-            <End Role="SYSUserRole" EntitySet="SYSUserRole" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__SYSUs__29572725" Association="Self.FK__SYSUserRo__SYSUs__29572725">
+          <AssociationSet Name="FK__SYSUserRo__SYSUs__35BCFE0A" Association="Self.FK__SYSUserRo__SYSUs__35BCFE0A">
             <End Role="SYSUser" EntitySet="SYSUser" />
             <End Role="SYSUserRole" EntitySet="SYSUserRole" />
           </AssociationSet>
@@ -163,6 +188,36 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DemoDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="buku">
+          <Key>
+            <PropertyRef Name="id_buku" />
+          </Key>
+          <Property Name="id_buku" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ISBN" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="judul" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="penulis" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="penerbit" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tahun" Type="Int32" Nullable="false" />
+          <Property Name="stok" Type="Int32" Nullable="false" />
+          <Property Name="harga_beli" Type="Int32" Nullable="false" />
+          <Property Name="harga_jual" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="laporans" Relationship="Self.FK__laporan__id_buku__3D5E1FD2" FromRole="buku" ToRole="laporan" />
+        </EntityType>
+        <EntityType Name="laporan">
+          <Key>
+            <PropertyRef Name="id_laporan" />
+          </Key>
+          <Property Name="id_laporan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_buku" Type="Int32" Nullable="false" />
+          <Property Name="id_pelanggan" Type="Int32" Nullable="false" />
+          <Property Name="keterangan" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tanggal" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="debet" Type="Int32" Nullable="false" />
+          <Property Name="kredit" Type="Int32" Nullable="false" />
+          <Property Name="saldo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="buku" Relationship="Self.FK__laporan__id_buku__3D5E1FD2" FromRole="laporan" ToRole="buku" />
+          <NavigationProperty Name="pelanggan" Relationship="Self.FK__laporan__id_pela__3C69FB99" FromRole="laporan" ToRole="pelanggan" />
+        </EntityType>
         <EntityType Name="LOOKUPRole">
           <Key>
             <PropertyRef Name="LOOKUPRoleID" />
@@ -174,8 +229,19 @@
           <Property Name="RowCreatedDateTime" Type="DateTime" Precision="3" />
           <Property Name="RowModifiedSYSUserID" Type="Int32" Nullable="false" />
           <Property Name="RowModifiedDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="SYSUserRoles" Relationship="Self.FK__SYSUserRo__LOOKU__21B6055D" FromRole="LOOKUPRole" ToRole="SYSUserRole" />
-          <NavigationProperty Name="SYSUserRoles1" Relationship="Self.FK__SYSUserRo__LOOKU__286302EC" FromRole="LOOKUPRole" ToRole="SYSUserRole" />
+          <NavigationProperty Name="SYSUserRoles" Relationship="Self.FK__SYSUserRo__LOOKU__34C8D9D1" FromRole="LOOKUPRole" ToRole="SYSUserRole" />
+        </EntityType>
+        <EntityType Name="pelanggan">
+          <Key>
+            <PropertyRef Name="id_pelanggan" />
+          </Key>
+          <Property Name="id_pelanggan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="no_id" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nama" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="alamat" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="no_tlp1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="no_tlp2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="laporans" Relationship="Self.FK__laporan__id_pela__3C69FB99" FromRole="pelanggan" ToRole="laporan" />
         </EntityType>
         <EntityType Name="SYSUser">
           <Key>
@@ -188,10 +254,8 @@
           <Property Name="RowCreatedDateTime" Type="DateTime" Precision="3" />
           <Property Name="RowModifiedSYSUserID" Type="Int32" Nullable="false" />
           <Property Name="RowMOdifiedDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="SYSUserProfiles" Relationship="Self.FK__SYSUserPr__SYSUs__1BFD2C07" FromRole="SYSUser" ToRole="SYSUserProfile" />
-          <NavigationProperty Name="SYSUserProfiles1" Relationship="Self.FK__SYSUserPr__SYSUs__267ABA7A" FromRole="SYSUser" ToRole="SYSUserProfile" />
-          <NavigationProperty Name="SYSUserRoles" Relationship="Self.FK__SYSUserRo__SYSUs__22AA2996" FromRole="SYSUser" ToRole="SYSUserRole" />
-          <NavigationProperty Name="SYSUserRoles1" Relationship="Self.FK__SYSUserRo__SYSUs__29572725" FromRole="SYSUser" ToRole="SYSUserRole" />
+          <NavigationProperty Name="SYSUserProfiles" Relationship="Self.FK__SYSUserPr__SYSUs__2F10007B" FromRole="SYSUser" ToRole="SYSUserProfile" />
+          <NavigationProperty Name="SYSUserRoles" Relationship="Self.FK__SYSUserRo__SYSUs__35BCFE0A" FromRole="SYSUser" ToRole="SYSUserRole" />
         </EntityType>
         <EntityType Name="SYSUserProfile">
           <Key>
@@ -206,8 +270,7 @@
           <Property Name="RowCreatedDateTime" Type="DateTime" Precision="3" />
           <Property Name="RowModifiedSYSUserID" Type="Int32" Nullable="false" />
           <Property Name="RowModifiedDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="SYSUser" Relationship="Self.FK__SYSUserPr__SYSUs__1BFD2C07" FromRole="SYSUserProfile" ToRole="SYSUser" />
-          <NavigationProperty Name="SYSUser1" Relationship="Self.FK__SYSUserPr__SYSUs__267ABA7A" FromRole="SYSUserProfile" ToRole="SYSUser" />
+          <NavigationProperty Name="SYSUser" Relationship="Self.FK__SYSUserPr__SYSUs__2F10007B" FromRole="SYSUserProfile" ToRole="SYSUser" />
         </EntityType>
         <EntityType Name="SYSUserRole">
           <Key>
@@ -221,12 +284,34 @@
           <Property Name="RowCreatedDateTime" Type="DateTime" Precision="3" />
           <Property Name="RowModifiedSYSUserID" Type="Int32" Nullable="false" />
           <Property Name="RowModifiedDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="LOOKUPRole" Relationship="Self.FK__SYSUserRo__LOOKU__21B6055D" FromRole="SYSUserRole" ToRole="LOOKUPRole" />
-          <NavigationProperty Name="LOOKUPRole1" Relationship="Self.FK__SYSUserRo__LOOKU__286302EC" FromRole="SYSUserRole" ToRole="LOOKUPRole" />
-          <NavigationProperty Name="SYSUser" Relationship="Self.FK__SYSUserRo__SYSUs__22AA2996" FromRole="SYSUserRole" ToRole="SYSUser" />
-          <NavigationProperty Name="SYSUser1" Relationship="Self.FK__SYSUserRo__SYSUs__29572725" FromRole="SYSUserRole" ToRole="SYSUser" />
+          <NavigationProperty Name="LOOKUPRole" Relationship="Self.FK__SYSUserRo__LOOKU__34C8D9D1" FromRole="SYSUserRole" ToRole="LOOKUPRole" />
+          <NavigationProperty Name="SYSUser" Relationship="Self.FK__SYSUserRo__SYSUs__35BCFE0A" FromRole="SYSUserRole" ToRole="SYSUser" />
         </EntityType>
-        <Association Name="FK__SYSUserRo__LOOKU__21B6055D">
+        <Association Name="FK__laporan__id_buku__3D5E1FD2">
+          <End Role="buku" Type="Self.buku" Multiplicity="1" />
+          <End Role="laporan" Type="Self.laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="buku">
+              <PropertyRef Name="id_buku" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_buku" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__laporan__id_pela__3C69FB99">
+          <End Role="pelanggan" Type="Self.pelanggan" Multiplicity="1" />
+          <End Role="laporan" Type="Self.laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pelanggan">
+              <PropertyRef Name="id_pelanggan" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_pelanggan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SYSUserRo__LOOKU__34C8D9D1">
           <End Role="LOOKUPRole" Type="Self.LOOKUPRole" Multiplicity="1" />
           <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
           <ReferentialConstraint>
@@ -238,19 +323,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SYSUserRo__LOOKU__286302EC">
-          <End Role="LOOKUPRole" Type="Self.LOOKUPRole" Multiplicity="1" />
-          <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LOOKUPRole">
-              <PropertyRef Name="LOOKUPRoleID" />
-            </Principal>
-            <Dependent Role="SYSUserRole">
-              <PropertyRef Name="LOOKUPRoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYSUserPr__SYSUs__1BFD2C07">
+        <Association Name="FK__SYSUserPr__SYSUs__2F10007B">
           <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
           <End Role="SYSUserProfile" Type="Self.SYSUserProfile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -262,31 +335,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SYSUserPr__SYSUs__267ABA7A">
-          <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
-          <End Role="SYSUserProfile" Type="Self.SYSUserProfile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYSUser">
-              <PropertyRef Name="SYSUserID" />
-            </Principal>
-            <Dependent Role="SYSUserProfile">
-              <PropertyRef Name="SYSUserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYSUserRo__SYSUs__22AA2996">
-          <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
-          <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYSUser">
-              <PropertyRef Name="SYSUserID" />
-            </Principal>
-            <Dependent Role="SYSUserRole">
-              <PropertyRef Name="SYSUserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYSUserRo__SYSUs__29572725">
+        <Association Name="FK__SYSUserRo__SYSUs__35BCFE0A">
           <End Role="SYSUser" Type="Self.SYSUser" Multiplicity="1" />
           <End Role="SYSUserRole" Type="Self.SYSUserRole" Multiplicity="*" />
           <ReferentialConstraint>
@@ -299,31 +348,30 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="DemoDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="bukus" EntityType="Self.buku" />
+          <EntitySet Name="laporans" EntityType="Self.laporan" />
           <EntitySet Name="LOOKUPRoles" EntityType="Self.LOOKUPRole" />
+          <EntitySet Name="pelanggans" EntityType="Self.pelanggan" />
           <EntitySet Name="SYSUsers" EntityType="Self.SYSUser" />
           <EntitySet Name="SYSUserProfiles" EntityType="Self.SYSUserProfile" />
           <EntitySet Name="SYSUserRoles" EntityType="Self.SYSUserRole" />
-          <AssociationSet Name="FK__SYSUserRo__LOOKU__21B6055D" Association="Self.FK__SYSUserRo__LOOKU__21B6055D">
+          <AssociationSet Name="FK__laporan__id_buku__3D5E1FD2" Association="Self.FK__laporan__id_buku__3D5E1FD2">
+            <End Role="buku" EntitySet="bukus" />
+            <End Role="laporan" EntitySet="laporans" />
+          </AssociationSet>
+          <AssociationSet Name="FK__laporan__id_pela__3C69FB99" Association="Self.FK__laporan__id_pela__3C69FB99">
+            <End Role="pelanggan" EntitySet="pelanggans" />
+            <End Role="laporan" EntitySet="laporans" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SYSUserRo__LOOKU__34C8D9D1" Association="Self.FK__SYSUserRo__LOOKU__34C8D9D1">
             <End Role="LOOKUPRole" EntitySet="LOOKUPRoles" />
             <End Role="SYSUserRole" EntitySet="SYSUserRoles" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__LOOKU__286302EC" Association="Self.FK__SYSUserRo__LOOKU__286302EC">
-            <End Role="LOOKUPRole" EntitySet="LOOKUPRoles" />
-            <End Role="SYSUserRole" EntitySet="SYSUserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SYSUserPr__SYSUs__1BFD2C07" Association="Self.FK__SYSUserPr__SYSUs__1BFD2C07">
+          <AssociationSet Name="FK__SYSUserPr__SYSUs__2F10007B" Association="Self.FK__SYSUserPr__SYSUs__2F10007B">
             <End Role="SYSUser" EntitySet="SYSUsers" />
             <End Role="SYSUserProfile" EntitySet="SYSUserProfiles" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYSUserPr__SYSUs__267ABA7A" Association="Self.FK__SYSUserPr__SYSUs__267ABA7A">
-            <End Role="SYSUser" EntitySet="SYSUsers" />
-            <End Role="SYSUserProfile" EntitySet="SYSUserProfiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__SYSUs__22AA2996" Association="Self.FK__SYSUserRo__SYSUs__22AA2996">
-            <End Role="SYSUser" EntitySet="SYSUsers" />
-            <End Role="SYSUserRole" EntitySet="SYSUserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SYSUserRo__SYSUs__29572725" Association="Self.FK__SYSUserRo__SYSUs__29572725">
+          <AssociationSet Name="FK__SYSUserRo__SYSUs__35BCFE0A" Association="Self.FK__SYSUserRo__SYSUs__35BCFE0A">
             <End Role="SYSUser" EntitySet="SYSUsers" />
             <End Role="SYSUserRole" EntitySet="SYSUserRoles" />
           </AssociationSet>
@@ -334,6 +382,35 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DemoDBModelStoreContainer" CdmEntityContainer="DemoDBEntities">
+          <EntitySetMapping Name="bukus">
+            <EntityTypeMapping TypeName="DemoDBModel.buku">
+              <MappingFragment StoreEntitySet="buku">
+                <ScalarProperty Name="id_buku" ColumnName="id_buku" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="judul" ColumnName="judul" />
+                <ScalarProperty Name="penulis" ColumnName="penulis" />
+                <ScalarProperty Name="penerbit" ColumnName="penerbit" />
+                <ScalarProperty Name="tahun" ColumnName="tahun" />
+                <ScalarProperty Name="stok" ColumnName="stok" />
+                <ScalarProperty Name="harga_beli" ColumnName="harga_beli" />
+                <ScalarProperty Name="harga_jual" ColumnName="harga_jual" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="laporans">
+            <EntityTypeMapping TypeName="DemoDBModel.laporan">
+              <MappingFragment StoreEntitySet="laporan">
+                <ScalarProperty Name="id_laporan" ColumnName="id_laporan" />
+                <ScalarProperty Name="id_buku" ColumnName="id_buku" />
+                <ScalarProperty Name="id_pelanggan" ColumnName="id_pelanggan" />
+                <ScalarProperty Name="keterangan" ColumnName="keterangan" />
+                <ScalarProperty Name="tanggal" ColumnName="tanggal" />
+                <ScalarProperty Name="debet" ColumnName="debet" />
+                <ScalarProperty Name="kredit" ColumnName="kredit" />
+                <ScalarProperty Name="saldo" ColumnName="saldo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="LOOKUPRoles">
             <EntityTypeMapping TypeName="DemoDBModel.LOOKUPRole">
               <MappingFragment StoreEntitySet="LOOKUPRole">
@@ -344,6 +421,18 @@
                 <ScalarProperty Name="RowCreatedDateTime" ColumnName="RowCreatedDateTime" />
                 <ScalarProperty Name="RowModifiedSYSUserID" ColumnName="RowModifiedSYSUserID" />
                 <ScalarProperty Name="RowModifiedDateTime" ColumnName="RowModifiedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pelanggans">
+            <EntityTypeMapping TypeName="DemoDBModel.pelanggan">
+              <MappingFragment StoreEntitySet="pelanggan">
+                <ScalarProperty Name="id_pelanggan" ColumnName="id_pelanggan" />
+                <ScalarProperty Name="no_id" ColumnName="no_id" />
+                <ScalarProperty Name="nama" ColumnName="nama" />
+                <ScalarProperty Name="alamat" ColumnName="alamat" />
+                <ScalarProperty Name="no_tlp1" ColumnName="no_tlp1" />
+                <ScalarProperty Name="no_tlp2" ColumnName="no_tlp2" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

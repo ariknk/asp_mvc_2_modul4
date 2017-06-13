@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Asp_mvc_2.Models.ViewModel.TambahBukuModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ISBN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.judul)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.penulis)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.penerbit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tahun)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.stok)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.harga_beli)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.harga_jual)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISBN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.judul)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.penulis)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.penerbit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tahun)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.stok)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.harga_beli)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.harga_jual)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id_buku }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id_buku }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id_buku })
+        </td>
+    </tr>
+}
+
+</table>

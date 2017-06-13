@@ -11,24 +11,23 @@ namespace Asp_mvc_2.Models.DB
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class LOOKUPRole
+    using System.ComponentModel.DataAnnotations;
+    public partial class pelanggan
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LOOKUPRole()
+        public pelanggan()
         {
-            this.SYSUserRoles = new HashSet<SYSUserRole>();
+            this.laporans = new HashSet<laporan>();
         }
-    
-        public int LOOKUPRoleID { get; set; }
-        public string RoleName { get; set; }
-        public string RoleDescription { get; set; }
-        public int RowCreatedSYSUserID { get; set; }
-        public Nullable<System.DateTime> RowCreatedDateTime { get; set; }
-        public int RowModifiedSYSUserID { get; set; }
-        public Nullable<System.DateTime> RowModifiedDateTime { get; set; }
+        [Key]
+        public int id_pelanggan { get; set; }
+        public string no_id { get; set; }
+        public string nama { get; set; }
+        public string alamat { get; set; }
+        public string no_tlp1 { get; set; }
+        public string no_tlp2 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SYSUserRole> SYSUserRoles { get; set; }
+        public virtual ICollection<laporan> laporans { get; set; }
     }
 }
